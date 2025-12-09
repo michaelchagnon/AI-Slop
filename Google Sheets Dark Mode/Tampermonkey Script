@@ -1,0 +1,40 @@
+// ==UserScript==
+// @name         Google Sheets Dark Mode (Filter Method)
+// @namespace    http://tampermonkey.net/
+// @version      1.1
+// @description  Invert colors for Google Sheets to create a dark mode
+// @author       You
+// @match        https://docs.google.com/spreadsheets/*
+// @grant        GM_addStyle
+// @run-at       document-start
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // This applies a filter to the whole HTML document
+    // It inverts luminosity (light to dark) and rotates hue (to keep blue blue, etc.)
+    const css = `
+        html {
+            filter: invert(90%) hue-rotate(180deg) !important;
+            background-color: #111 !important;
+        }
+
+        /* Revert the filter for images, videos, and specific UI elements so they look normal */
+        img, video, iframe, .kix-embedded-object-view, .docs-icon-img {
+            filter: invert(100%) hue-rotate(180deg) !important;
+        }
+
+        /* Optional: Fix full screen background issues */
+        .docs-homescreen-frozen-header {
+            background-color: #eee !important;
+        }
+    `;
+
+    // Inject the CSS
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));
+    document.head.appendChild(style);
+
+})();
